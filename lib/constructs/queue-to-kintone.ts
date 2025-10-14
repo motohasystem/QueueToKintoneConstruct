@@ -4,7 +4,6 @@
  */
 
 import { Construct } from 'constructs'
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import { Queue } from 'aws-cdk-lib/aws-sqs'
 import { CfnOutput, Duration } from 'aws-cdk-lib'
 import { NodejsFunction } from 'aws-cdk-lib/aws-lambda-nodejs'
@@ -27,8 +26,6 @@ interface QueueToKintoneConstructProps {
 }
 
 export class QueueToKintoneConstruct extends Construct {
-    public readonly table: dynamodb.Table
-
     constructor(scope: Construct, id: string, props: QueueToKintoneConstructProps) {
         super(scope, id)
 

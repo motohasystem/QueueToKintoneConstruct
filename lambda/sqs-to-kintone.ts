@@ -19,7 +19,7 @@ export const handler = async (event: SQSEvent): Promise<void> => {
 
     // kintoneに送信するレコードの配列
     // ここでは一度に複数のレコードを送信することを想定しています
-    const kintoneRecords = []
+    const kintoneRecords = [];
 
     for (const record of event.Records) {
         const body = JSON.parse(record.body);

@@ -14,20 +14,45 @@ dotenv.config();
 // そのDLQからのメッセージをSlackに通知するLambda関数も含みます。
 export class QueueToKintoneStack extends Stack {
     // kintoneアプリの情報を環境変数から取得
-    appInfo: kintoneAppAPIInformation = {
-        appLabel: process.env.APP_LABEL || '',
-        appId: process.env.APP_ID || '',
-        apiUrl: process.env.API_URL || '',
-        apiToken: process.env.API_TOKEN || '',
-        slackWebhookUrl: process.env.SLACK_WEBHOOK_URL || ''
-    };
+    appInfo: kintoneAppAPIInformation;
 
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
 
+        // 環境変数のバリデーション
+        this.validateEnvironmentVariables();
+
         new QueueToKintoneConstruct(this, 'QueueToKintone', {
             appInfo: this.appInfo
         });
+    }
+
+    private validateEnvironmentVariables() {
+        const requiredEnvVars = [
+            'APP_LABEL',
+            'APP_ID',
+            'API_URL',
+            'API_TOKEN',
+            'SLACK_WEBHOOK_URL'
+        ];
+
+        const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+
+        if (missingVars.length > 0) {
+            throw new Error(
+                `必須の環境変数が設定されていません: ${missingVars.join(', ')}\n` +
+                `.env ファイルを作成し、必要な環境変数を設定してください。\n` +
+                `詳細は .env.example ファイルを参照してください。`
+            );
+        }
+
+        this.appInfo = {
+            appLabel: process.env.APP_LABEL!,
+            appId: process.env.APP_ID!,
+            apiUrl: process.env.API_URL!,
+            apiToken: process.env.API_TOKEN!,
+            slackWebhookUrl: process.env.SLACK_WEBHOOK_URL!
+        };
     }
 
 }
