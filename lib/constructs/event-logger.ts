@@ -74,7 +74,7 @@ export class EventLoggerConstruct extends Construct {
 
         // Lambda to process messages from SQS and call Kintone REST API
         const sqsToKintoneLambda = new NodejsFunction(this, 'SqsToKintoneHandler' + channelLabel, {
-            entry: path.join(__dirname, '../lambda/sqs-to-kintone.ts'),
+            entry: path.join(__dirname, '../../lambda/sqs-to-kintone.ts'),
             runtime: Runtime.NODEJS_22_X,
             timeout: Duration.seconds(60), // 明示的に設定
             environment: {
@@ -93,7 +93,7 @@ export class EventLoggerConstruct extends Construct {
 
         // Lambda to notify Slack when DLQ receives messages
         const notifySlackLambda = new NodejsFunction(this, 'NotifySlackFromDlq' + channelLabel, {
-            entry: path.join(__dirname, '../lambda/notify-slack-from-dlq.ts'),
+            entry: path.join(__dirname, '../../lambda/notify-slack-from-dlq.ts'),
             runtime: Runtime.NODEJS_22_X,
             environment: {
                 SLACK_WEBHOOK_URL: appInfo.slackWebhookUrl
