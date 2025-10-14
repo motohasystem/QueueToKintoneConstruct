@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import * as cdk from 'aws-cdk-lib';
-import { EventLoggerStack } from '../lib/dev-stack';
+import { QueueToKintoneStack } from '../lib/dev-stack';
 import * as dotenv from 'dotenv';
 
 // .envファイルから環境変数を読み込む
@@ -16,7 +16,7 @@ const stackName = `${projectName}-${stageName}-Stack`;
 // 環境変数からリージョンを取得（デフォルトはus-east-1）
 const region = process.env.REGION || 'us-east-1';
 
-const stack = new EventLoggerStack(app, stackName, {
+const stack = new QueueToKintoneStack(app, stackName, {
     env: { region: region } // 環境変数からリージョンを設定
 
 
@@ -37,6 +37,6 @@ const stack = new EventLoggerStack(app, stackName, {
 
 // スタックのタグを設定
 cdk.Tags.of(stack).add('Project', process.env.PROJECT_NAME || 'KintanLab');
-cdk.Tags.of(stack).add('Component', process.env.COMPONENT_NAME || 'EventLogger');
+cdk.Tags.of(stack).add('Component', process.env.COMPONENT_NAME || 'QueueToKintone');
 cdk.Tags.of(stack).add('Stage', process.env.STAGE_NAME || 'dev');
 

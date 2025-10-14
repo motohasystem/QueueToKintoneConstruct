@@ -22,14 +22,14 @@ export interface kintoneAppAPIInformation {
 }
 
 
-interface EventLoggerConstructProps {
+interface QueueToKintoneConstructProps {
     appInfo: kintoneAppAPIInformation;
 }
 
-export class EventLoggerConstruct extends Construct {
+export class QueueToKintoneConstruct extends Construct {
     public readonly table: dynamodb.Table
 
-    constructor(scope: Construct, id: string, props: EventLoggerConstructProps) {
+    constructor(scope: Construct, id: string, props: QueueToKintoneConstructProps) {
         super(scope, id)
 
         // Dead Letter Queue

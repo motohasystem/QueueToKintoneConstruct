@@ -5,14 +5,14 @@ import { Construct } from 'constructs';
 
 // .envファイルから環境変数を読み込む
 import * as dotenv from 'dotenv';
-import { EventLoggerConstruct, kintoneAppAPIInformation } from './constructs/event-logger';
+import { QueueToKintoneConstruct, kintoneAppAPIInformation } from './constructs/queue-to-kintone';
 dotenv.config();
 
 
 // このスタックは、SQSに送信したメッセージをkintoneアプリに登録するConstructsのサンプル実装です。
 // SQSのメッセージを処理できなかった場合にDead Letter Queue (DLQ)に送信し、
 // そのDLQからのメッセージをSlackに通知するLambda関数も含みます。
-export class EventLoggerStack extends Stack {
+export class QueueToKintoneStack extends Stack {
     // kintoneアプリの情報を環境変数から取得
     appInfo: kintoneAppAPIInformation = {
         appLabel: process.env.APP_LABEL || '',
@@ -25,7 +25,7 @@ export class EventLoggerStack extends Stack {
     constructor(scope: Construct, id: string, props?: StackProps) {
         super(scope, id, props);
 
-        new EventLoggerConstruct(this, 'EventLogger', {
+        new QueueToKintoneConstruct(this, 'QueueToKintone', {
             appInfo: this.appInfo
         });
     }
