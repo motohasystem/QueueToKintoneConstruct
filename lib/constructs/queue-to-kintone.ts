@@ -26,6 +26,8 @@ interface QueueToKintoneConstructProps {
 }
 
 export class QueueToKintoneConstruct extends Construct {
+    public readonly queue: Queue;
+
     constructor(scope: Construct, id: string, props: QueueToKintoneConstructProps) {
         super(scope, id)
 
@@ -35,7 +37,7 @@ export class QueueToKintoneConstruct extends Construct {
         });
 
         // SQS Queue
-        const queue = new Queue(this, id + 'Queue', {
+        this.queue = new Queue(this, id + 'Queue', {
             receiveMessageWaitTime: Duration.seconds(20),   // Long polling for SQS with 20 seconds
             visibilityTimeout: Duration.seconds(120),
             deadLetterQueue: {
@@ -45,16 +47,16 @@ export class QueueToKintoneConstruct extends Construct {
         });
 
         // DBとkintoneをSQSで接続する
-        this.channelingDBtoKintone(id, queue, deadLetterQueue, props.appInfo);      // 寄付者情報テーブルの処理
+        this.channelingDBtoKintone(id, this.queue, deadLetterQueue, props.appInfo);      // 寄付者情報テーブルの処理
 
         new CfnOutput(this, `${id}-QueueArn`, {
-            value: queue.queueArn,
+            value: this.queue.queueArn,
             description: 'The ARN of the SQS queue',
             exportName: `${id}-QueueArn`,
         });
 
         new CfnOutput(this, `${id}-QueueUrl`, {
-            value: queue.queueUrl,
+            value: this.queue.queueUrl,
             description: 'The URL of the SQS queue',
             exportName: `${id}-QueueUrl`,
         });

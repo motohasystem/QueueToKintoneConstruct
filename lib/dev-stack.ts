@@ -6,6 +6,7 @@ import { Construct } from 'constructs';
 // .envファイルから環境変数を読み込む
 import * as dotenv from 'dotenv';
 import { QueueToKintoneConstruct, kintoneAppAPIInformation } from './constructs/queue-to-kintone';
+import { ExperimentalSqsMessageSenderConstruct } from './constructs/experimental-message-sender';
 dotenv.config();
 
 
@@ -22,8 +23,13 @@ export class QueueToKintoneStack extends Stack {
         // 環境変数のバリデーション
         this.validateEnvironmentVariables();
 
-        new QueueToKintoneConstruct(this, 'QueueToKintone', {
+        const queueToKintoneConstruct = new QueueToKintoneConstruct(this, 'QueueToKintone', {
             appInfo: this.appInfo
+        });
+
+        // キューを登録するためのテスト用Lambda関数を持ったConstruct
+        new ExperimentalSqsMessageSenderConstruct(this, 'SqsMessageSender', {
+            queue: queueToKintoneConstruct.queue,
         });
     }
 
